@@ -4,7 +4,7 @@ USER root
 
 RUN mkdir /app
 COPY src /app/
-RUN cd /app & npm i & npm i -g ts-node
+RUN cd /app & npm i & npm i -g ts-node & chmod +x /entrypoint.sh
 
 COPY entrypoint.sh /entrypoint.sh
 
