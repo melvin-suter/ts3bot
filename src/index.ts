@@ -8,34 +8,20 @@ import { TextMessage } from "ts3-nodejs-library/lib/types/Events";
 import { CH as Language } from "./lang/CH";
 import { UserData } from "./models/user-data";
 import { Timestamp } from "firebase/firestore/lite";
+import { Config } from "./models/config";
 
 
 (async() => {
 
-    let excludeFromKickNickname = [
+    let config = new Config();
+    config.excludeFromKickNickname = [
         'Supo Musig'
     ];
-    let dailyCoins = 5;
+
     let bot = new TS3Bot();
-    let db = new DB(
-        {
-            apiKey: process.env.DB_API_KEY,
-            authDomain: process.env.DB_AUTH_DOMAIN,
-            projectId: process.env.DB_PROJECT_ID,
-            storageBucket: process.env.DB_STORAGE_BUCKET,
-            messagingSenderId: process.env.DB_MESSAGING_SENDER_ID,
-            appId: process.env.DB_APP_ID
-        }
-    );
+    let db = new DB(config.db);
     
-    await bot.startUp({
-        host: <string>process.env.TS_HOST,
-        queryport: Number(process.env.TS_QUERYPORT),
-        serverport: Number(process.env.TS_SERVERPORT),
-        username: <string>process.env.TS_USERNAME,
-        password: <string>process.env.TS_PASSWORD,
-        nickname: <string>process.env.TS_NICKNAME
-    });
+    await bot.startUp(config.ts);
 
     bot.registerCommand(["!help","!helpme","!?","'!hä"], async(ev:TextMessage, args:any) => {
         let client = ev.invoker;
@@ -49,7 +35,7 @@ import { Timestamp } from "firebase/firestore/lite";
        
         if(userData.coin >= 10) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 10;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
@@ -64,7 +50,7 @@ import { Timestamp } from "firebase/firestore/lite";
                 bot.teamspeak!.clientList().then( clients => {
                     let excludedClients:TeamSpeakClient[] = [];
                     clients.forEach(cl => {
-                        if(!excludeFromKickNickname.includes(cl.nickname)){
+                        if(!config.excludeFromKickNickname.includes(cl.nickname)){
                             excludedClients.push(cl);
                         }
                     });
@@ -100,10 +86,10 @@ import { Timestamp } from "firebase/firestore/lite";
 
         if(userData.lastDailyCoin.seconds < today / 1000){
             let newUserData = userData;
-            newUserData.coin += dailyCoins;
+            newUserData.coin += config.wallet_dailyCoins;
             newUserData.lastDailyCoin = new Timestamp((new Date()).getTime() / 1000, 0);
             db.setUserData(client.uniqueIdentifier, newUserData);
-            client.message( Language.get('wallet_daily_success').format(dailyCoins,newUserData.coin) );
+            client.message( Language.get('wallet_daily_success').format(config.wallet_dailyCoins,newUserData.coin) );
         } else {
             client.message( Language.get('wallet_daily_fail') );
             
@@ -121,7 +107,7 @@ import { Timestamp } from "firebase/firestore/lite";
 
         if(userData.coin >= 30) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 30;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
@@ -146,7 +132,7 @@ import { Timestamp } from "firebase/firestore/lite";
 
         if(userData.coin >= 60) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 60;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
@@ -170,7 +156,7 @@ import { Timestamp } from "firebase/firestore/lite";
 
         if(userData.coin >= 150) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 150;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
@@ -194,7 +180,7 @@ import { Timestamp } from "firebase/firestore/lite";
 
         if(userData.coin >= 400) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 400;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
