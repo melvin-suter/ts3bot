@@ -1,9 +1,19 @@
 {
+  "name": "ts3bot",
+  "version": "0.0.1",
+  "main": "index.ts",
   "dependencies": {
     "eventemitter3": "^4.0.7",
     "firebase": "^9.13.0",
     "quoted-string-space-split": "^1.1.1",
     "string-format-ts": "^1.0.4",
     "ts3-nodejs-library": "^3.4.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "build": "tsc",
+    "run": "node dist/index.js"
   }
 }

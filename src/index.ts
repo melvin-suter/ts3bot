@@ -1,4 +1,4 @@
-import { TeamSpeak, QueryProtocol, ClientType, TeamSpeakClient } from "ts3-nodejs-library"
+import { TeamSpeakClient } from "ts3-nodejs-library"
 import 'string-format-ts';
 import { TS3Bot } from "./lib/bot";
 import { Helper } from "./lib/helper";
@@ -15,6 +15,7 @@ import { Timestamp } from "firebase/firestore/lite";
     let excludeFromKickNickname = [
         'Supo Musig'
     ];
+    
     let dailyCoins = 5;
     let bot = new TS3Bot();
     let db = new DB(

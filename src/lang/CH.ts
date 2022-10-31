@@ -1,7 +1,7 @@
 import { Language } from "./Language";
 
 export class CH extends Language {
-    static data:any = {
+    static data: any = {
 
         'help_text': [
 `
