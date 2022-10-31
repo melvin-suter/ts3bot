@@ -1,4 +1,4 @@
-import { TeamSpeak, QueryProtocol, ClientType, TeamSpeakClient } from "ts3-nodejs-library"
+import { TeamSpeakClient } from "ts3-nodejs-library"
 import 'string-format-ts';
 import { TS3Bot } from "./lib/bot";
 import { Helper } from "./lib/helper";
@@ -17,21 +17,22 @@ import { Config } from "./models/config";
     config.excludeFromKickNickname = [
         'Supo Musig'
     ];
+    
 
     let bot = new TS3Bot();
     let db = new DB(config.db);
     
     await bot.startUp(config.ts);
 
-    bot.registerCommand(["!help","!helpme","!?","'!hä"], async(ev:TextMessage, args:any) => {
+    bot.registerCommand(["!help", "!helpme", "!?", "'!hä"], async (ev: TextMessage, args: any) => {
         let client = ev.invoker;
 
         client.message(Language.get('help_text'));
     });
 
-    bot.registerCommand(["!russianroulette","!roulette"], async (ev:TextMessage, args:any) => {
+    bot.registerCommand(["!russianroulette", "!roulette"], async (ev: TextMessage, args: any) => {
         let client = ev.invoker;
-        let userData:UserData = await db.getUserData(client.uniqueIdentifier);
+        let userData = await db.getUserData(client.uniqueIdentifier);
        
         if(userData.coin >= 10) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
@@ -40,7 +41,6 @@ import { Config } from "./models/config";
                 newUserDate.coin -= 10;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
 
-                
                 bot.sendMessageToAll( Language.get('russianroulette_step1') );
                 await Helper.delay(1000);
                 bot.sendMessageToAll( Language.get('russianroulette_step2') );
@@ -73,13 +73,13 @@ import { Config } from "./models/config";
         bot.sendMessageToAll( Language.get('coin_placeholder').format((Math.random() > 0.5 ? Language.get('coin_tails') : Language.get('coin_heads'))));
     });
 
-    bot.registerCommand(["!coins", "!wallet"], async(ev:TextMessage,q:any) => {
+    bot.registerCommand(["!coins", "!wallet"], async (ev: TextMessage, q: any) => {
         let client = ev.invoker;
         let userData = await db.getUserData(client.uniqueIdentifier);
         client.message( Language.get('wallet_current_amount') .format(userData!.coin))
     });
 
-    bot.registerCommand(['!daily','!dailycoins'], async(ev:TextMessage, args:any) => {
+    bot.registerCommand(['!daily','!dailycoins'], async (ev: TextMessage, args: any) => {
         let client = ev.invoker;
         let userData:UserData = await db.getUserData(client.uniqueIdentifier);
         let today:number = new Date().setHours(0, 0, 0, 0);
@@ -145,7 +145,7 @@ import { Config } from "./models/config";
 
     });
 
-    bot.registerCommand(['!ban5'], async(ev:TextMessage, args:any) => {
+    bot.registerCommand(['!ban5'], async (ev: TextMessage, args: any) => {
         let client = ev.invoker;
         let userData:UserData = await db.getUserData(client.uniqueIdentifier);
         
@@ -169,7 +169,7 @@ import { Config } from "./models/config";
 
     });
 
-    bot.registerCommand(['!ban30'], async(ev:TextMessage, args:any) => {
+    bot.registerCommand(['!ban30'], async (ev: TextMessage, args: any) => {
         let client = ev.invoker;
         let userData:UserData = await db.getUserData(client.uniqueIdentifier);
         
