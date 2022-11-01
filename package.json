@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "dotenv": "^16.0.3",
     "eventemitter3": "^4.0.7",
     "firebase": "^9.13.0",
     "quoted-string-space-split": "^1.1.1",
