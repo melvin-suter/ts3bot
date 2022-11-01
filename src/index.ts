@@ -35,7 +35,7 @@ import { Config } from "./models/config";
        
         if(userData.coin >= 10) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) < 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 10;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
@@ -107,7 +107,7 @@ import { Config } from "./models/config";
 
         if(userData.coin >= 30) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) < 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 30;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
@@ -132,7 +132,7 @@ import { Config } from "./models/config";
 
         if(userData.coin >= 60) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) < 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 60;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
@@ -156,7 +156,7 @@ import { Config } from "./models/config";
 
         if(userData.coin >= 150) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) < 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 150;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
@@ -180,7 +180,7 @@ import { Config } from "./models/config";
 
         if(userData.coin >= 400) {
             let client2kick = await bot.teamspeak!.getClientByName(args[0]);
-            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) >= 0){
+            if(client2kick != undefined && config.excludeFromKickNickname.indexOf(client2kick.nickname) < 0){
                 let newUserDate = userData;
                 newUserDate.coin -= 400;
                 db.setUserData(client.uniqueIdentifier, newUserDate);
