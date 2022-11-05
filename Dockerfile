@@ -2,11 +2,11 @@ FROM node:lts-alpine3.16
 
 USER root
 
+RUN npm i & npm run build
 RUN mkdir /app
-COPY src /app/
-RUN cd /app & npm i & npm run build
+COPY dist /app/
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-CMD ["node","/app/dist/index.js"]
+CMD ["node","/app/index.js"]
