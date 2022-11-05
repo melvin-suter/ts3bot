@@ -2,7 +2,11 @@ FROM node:lts-alpine3.16
 
 USER root
 
-RUN npm i & npm run build
+COPY ./package*.json ./
+COPY src ./src
+COPY tsconfig.json ./
+RUN npm install
+RUN npm run build
 RUN mkdir /app
 COPY dist /app/
 
