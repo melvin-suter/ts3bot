@@ -142,7 +142,7 @@ Gäld ond zügs:
             'ond {0} gönd de bach durab'
         ],
 
-        'wallet_sots_win': [
+        'wallet_slots_win': [
             'gunä, es git {0} gäld',
             'money money money +{0}',
             'oha, ganzi {0}',

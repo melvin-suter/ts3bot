@@ -1,7 +1,10 @@
 import { QueryProtocol, TeamSpeak } from "ts3-nodejs-library";
-import { splitSpacesExcludeQuotes } from "quoted-string-space-split";
 import { EventEmitter } from "eventemitter3";
 import { TextMessage } from "ts3-nodejs-library/lib/types/Events";
+import { CommandHandler } from "./command-handler";
+import { CommandRouter } from "./command-router";
+import { Config } from "../models/config";
+import { DB } from "./db";
 
 export interface TS3Params {
     host: string,
@@ -15,7 +18,7 @@ export interface TS3Params {
 
 export class TS3Bot extends EventEmitter {
 
-    public teamspeak?: TeamSpeak;
+    public teamspeak!: TeamSpeak;
 
     private defaultParams = {
         protocol: QueryProtocol.RAW,
@@ -23,20 +26,21 @@ export class TS3Bot extends EventEmitter {
         serverport: 9987
     };
 
+    private commandRouter!: CommandRouter;
 
-    constructor(){
+    constructor(private config: Config, private db: DB) {
         super();
     }
 
     public async startUp(params: TS3Params) {
         let usableParams = {...this.defaultParams,...params};
 
-        await TeamSpeak.connect(usableParams).then(async teamspeak => this.teamspeak = teamspeak);
+        this.teamspeak = await TeamSpeak.connect(usableParams);
         
         setInterval(() => {
-            this.teamspeak!.complainList().then( data => {
+            this.teamspeak.complainList().then( data => {
                 data.forEach(complain => {
-                    this.emit('complainadd',complain);
+                    this.emit('complainadd', complain);
                     this.teamspeak!.complainDel(complain.tcldbid,complain.fcldbid);
                 });
             }).catch(err => {
@@ -44,23 +48,17 @@ export class TS3Bot extends EventEmitter {
             });
         }, 2000);
 
-        this.teamspeak?.setMaxListeners(100);
-    }
+        this.teamspeak.setMaxListeners(100);
 
+        this.commandRouter = new CommandRouter(this.config, this.db, this.teamspeak);
+        this.teamspeak.on('textmessage', (ev: TextMessage) => this.commandRouter.handle(ev));
+    }
 
     public sendMessageToAll(message: string) {
         this.teamspeak!.clientList().then(clients => clients.forEach(client => client.message(message)));
     }
 
-    public async registerCommand(commands: string[], handler: (ev: TextMessage, args: string[]) => void) {
-        this.teamspeak!.on("textmessage", (ev: TextMessage) => {
-            let command = ev.msg.trim().split(" ")[0].toLowerCase();
-            let args = splitSpacesExcludeQuotes(ev.msg.trimEnd().split(" ").slice(1).join(" "));
-
-            if (commands.indexOf(command) >= 0) {
-                handler(ev, args);
-            }
-        });
+    registerCommands(...handlers: CommandHandler[]) {
+        this.commandRouter.register(...handlers);
     }
-
 }

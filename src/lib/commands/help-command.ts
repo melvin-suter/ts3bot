@@ -1,10 +1,11 @@
-import { TextMessageEvent } from "ts3-nodejs-library";
+import { TeamSpeak, TextMessageEvent } from "ts3-nodejs-library";
 import { Language } from "../../lang/Language";
+import { CommandContext } from "../command-context";
 import { CommandHandler } from "../command-handler";
 
 export class HelpCommand implements CommandHandler {
-    async handle(ev: TextMessageEvent, args: any): Promise<void> {
-        const client = ev.invoker;
+    async handle(context: CommandContext): Promise<void> {
+        const client = context.event.invoker;
         client.message(Language.get('help_text'));
     }
 
@@ -18,6 +19,6 @@ export class HelpCommand implements CommandHandler {
     }
 
     get name(): string {
-        return 'help';
+        return '!help';
     }
 }

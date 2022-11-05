@@ -1,7 +1,7 @@
-import { TextMessage } from "ts3-nodejs-library/lib/types/Events";
+import { CommandContext } from "./command-context";
 
 export interface CommandHandler {
-    handle(ev : TextMessage, args: any) : Promise<void>;
+    handle(context: CommandContext) : Promise<void>;
     get aliases() : string[];
     get name(): string;
 }
