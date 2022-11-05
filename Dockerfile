@@ -5,10 +5,11 @@ USER root
 COPY ./package*.json ./
 COPY src ./src
 COPY tsconfig.json ./
+
 RUN npm install
 RUN npm run build
 RUN mkdir /app
-COPY dist /app/
+RUN cp -a dist/. /app/
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
