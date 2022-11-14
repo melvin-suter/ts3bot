@@ -2,12 +2,16 @@ FROM node:lts-alpine3.16
 
 USER root
 
+COPY ./package*.json ./
+COPY src ./src
+COPY tsconfig.json ./
+
+RUN npm install
+RUN npm run build
 RUN mkdir /app
-COPY src /app/
-RUN cd /app & npm i & npm i -g ts-node
+RUN cp -a dist/. /app/
 
 COPY entrypoint.sh /entrypoint.sh
-
 RUN chmod +x /entrypoint.sh
 
-CMD ["npx","ts-node","/app/index.ts"]
+CMD ["node","/app/index.js"]
